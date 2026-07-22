@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sathvik Merugu — Senior Full-Stack .NET Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1E33;
+    --bg-panel:#0F2846;
+    --bg-panel-2:#0D223C;
+    --grid-line: rgba(142,202,230,0.07);
+    --grid-line-strong: rgba(142,202,230,0.14);
+    --line: #4E7CA6;
+    --line-bright: #8ECAE6;
+    --ink: #EAF2F8;
+    --ink-dim: #93AEC7;
+    --ink-faint: #5E7C97;
+    --amber: #FFB627;
+    --green: #6FCF97;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0px, var(--grid-line) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    position:relative;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  ::selection{ background:var(--amber); color:#0B1E33; }
+
+  a{ color:var(--line-bright); }
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--amber); outline-offset:3px; }
+
+  .crosshair{ position:fixed; width:22px; height:22px; z-index:50; pointer-events:none; }
+  .crosshair::before, .crosshair::after{ content:""; position:absolute; background:var(--line); }
+  .crosshair::before{ width:100%; height:1px; top:50%; }
+  .crosshair::after{ width:1px; height:100%; left:50%; }
+  .ch-tl{ top:14px; left:14px; }
+  .ch-tr{ top:14px; right:14px; }
+  .ch-bl{ bottom:14px; left:14px; }
+  .ch-br{ bottom:14px; right:14px; }
+
+  .sheet-frame{
+    position:fixed; inset:10px; border:1px solid var(--grid-line-strong);
+    pointer-events:none; z-index:5;
+  }
+
+  /* ---------- NAV ---------- */
+  .navbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 34px;
+    background:rgba(11,30,51,0.86);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--grid-line-strong);
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.08em;
+  }
+  .navbar .brand{ color:var(--ink); text-decoration:none; font-weight:600; }
+  .navbar .brand span{ color:var(--amber); }
+  .navlinks{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
+  .navlinks a{ color:var(--ink-dim); text-decoration:none; text-transform:uppercase; }
+  .navlinks a:hover{ color:var(--line-bright); }
+  .navlinks .idx{ color:var(--ink-faint); margin-right:6px; }
+
+  main{ position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:0 34px; }
+  section{ padding:96px 0 64px; border-bottom:1px solid var(--grid-line-strong); }
+  section:last-of-type{ border-bottom:none; }
+
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--amber); display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  }
+  .eyebrow::before{ content:""; width:26px; height:1px; background:var(--amber); display:inline-block; }
+
+  h2.section-title{
+    font-family:var(--font-display); font-weight:600; font-size:clamp(24px,3vw,34px);
+    margin:0 0 40px; color:var(--ink);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding-top:64px; }
+  .titleblock{
+    display:grid; grid-template-columns: 1.15fr 0.85fr; gap:48px; align-items:center;
+  }
+  .titleblock-copy .role-tag{
+    font-family:var(--font-mono); font-size:13px; color:var(--green);
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:22px;
+    border:1px solid rgba(111,207,151,0.35); padding:5px 12px; border-radius:2px;
+  }
+  .role-tag .dot{ width:6px; height:6px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); }
+
+  h1{
+    font-family:var(--font-display); font-weight:700; font-size:clamp(40px,5.4vw,64px);
+    line-height:1.04; margin:0 0 10px; color:var(--ink); letter-spacing:-0.01em;
+  }
+  h1 .sub{
+    display:block; font-family:var(--font-mono); font-weight:500; font-size:clamp(15px,1.7vw,19px);
+    color:var(--line-bright); letter-spacing:0.04em; margin-top:14px; text-transform:uppercase;
+  }
+
+  .hero-desc{ color:var(--ink-dim); max-width:52ch; margin:26px 0 32px; font-size:16px; }
+
+  .hero-meta{ display:flex; flex-wrap:wrap; gap:22px 30px; font-family:var(--font-mono); font-size:13px; color:var(--ink-dim); }
+  .hero-meta a{ color:var(--ink-dim); text-decoration:none; border-bottom:1px dotted var(--ink-faint); }
+  .hero-meta a:hover{ color:var(--line-bright); border-color:var(--line-bright); }
+  .hero-meta .meta-item{ display:flex; align-items:center; gap:8px; }
+  .hero-meta .k{ color:var(--ink-faint); }
+  .copy-btn{
+    background:none; border:none; cursor:pointer; color:var(--ink-faint);
+    font-family:var(--font-mono); font-size:12px; padding:0 0 0 2px; line-height:1;
+  }
+  .copy-btn:hover{ color:var(--line-bright); }
+  .copy-btn.copied{ color:var(--green); }
+
+  .stat-row{ display:flex; flex-wrap:wrap; gap:36px; margin:34px 0 6px; }
+  .stat{ font-family:var(--font-mono); }
+  .stat .stat-num{ font-family:var(--font-display); font-weight:700; font-size:28px; color:var(--line-bright); display:block; }
+  .stat .stat-num .unit{ font-size:16px; color:var(--amber); }
+  .stat .stat-label{ font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-faint); }
+
+  /* Pipeline schematic */
+  .schematic{
+    background:var(--bg-panel); border:1px solid var(--grid-line-strong); border-radius:2px;
+    padding:22px 18px 16px; position:relative;
+  }
+  .schematic .cap{
+    font-family:var(--font-mono); font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--ink-faint); display:flex; justify-content:space-between; margin-bottom:14px;
+  }
+  .schematic .cap span:last-child{ color:var(--amber); }
+  svg.pipeline{ width:100%; height:auto; display:block; }
+  .node-box{ fill:var(--bg-panel-2); stroke:var(--line); stroke-width:1; }
+  .node-label{ font-family:'JetBrains Mono', monospace; font-size:10.5px; fill:var(--ink); letter-spacing:0.03em; }
+  .node-sub{ font-family:'JetBrains Mono', monospace; font-size:8.5px; fill:var(--ink-faint); }
+  .pipe{ fill:none; stroke:var(--line); stroke-width:1.4; }
+  .packet{ fill:var(--amber); filter:drop-shadow(0 0 4px rgba(255,182,39,0.9)); }
+  .packet2{ fill:var(--line-bright); filter:drop-shadow(0 0 4px rgba(142,202,230,0.9)); }
+
+  .node{ cursor:pointer; }
+  .node .node-box{ transition:stroke 0.15s ease, fill 0.15s ease; }
+  .node:hover .node-box, .node:focus-visible .node-box{ stroke:var(--line-bright); fill:#123457; }
+  .node.active .node-box{ stroke:var(--amber); stroke-width:1.6; fill:#173a2b; }
+  .node.active .node-label{ fill:var(--amber); }
+  .node:focus-visible{ outline:none; }
+  .node:focus-visible .node-box{ stroke:var(--amber); }
+  .pipe.lit{ stroke:var(--amber); }
+
+  .schematic-hint{ font-family:var(--font-mono); font-size:10px; color:var(--ink-faint); margin-top:8px; text-align:center; letter-spacing:0.06em; }
+  .node-panel{
+    margin-top:14px; border-top:1px dashed var(--grid-line-strong); padding-top:14px;
+    min-height:64px;
+  }
+  .node-panel .np-title{ font-family:var(--font-mono); font-size:12px; color:var(--amber); letter-spacing:0.06em; margin-bottom:6px; text-transform:uppercase; }
+  .node-panel .np-body{ color:var(--ink-dim); font-size:13px; line-height:1.55; }
+  .node-panel .np-placeholder{ color:var(--ink-faint); font-style:normal; }
+
+  /* nav active state */
+  .navlinks a.active{ color:var(--line-bright); }
+  .navlinks a.active .idx{ color:var(--amber); }
+
+  /* BOM search + expand */
+  .bom-controls{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .bom-search{
+    flex:1; max-width:320px; background:var(--bg-panel); border:1px solid var(--grid-line-strong);
+    color:var(--ink); font-family:var(--font-mono); font-size:13px; padding:10px 12px; border-radius:2px;
+  }
+  .bom-search::placeholder{ color:var(--ink-faint); }
+  .bom-search:focus-visible{ outline:2px solid var(--amber); outline-offset:1px; }
+  .bom-count{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); white-space:nowrap; }
+  table.bom tbody tr{ cursor:pointer; }
+  table.bom tbody tr.hidden-row{ display:none; }
+  table.bom tbody tr.expanded{ background:rgba(142,202,230,0.05); }
+  tr.detail-row{ display:none; }
+  tr.detail-row.open{ display:table-row; }
+  tr.detail-row td{ padding:0 16px 16px; color:var(--ink-faint); font-family:var(--font-mono); font-size:12px; border-bottom:1px solid var(--grid-line); }
+  tr.detail-row.open ~ tr.detail-row{ }
+
+  /* experience expand */
+  .stage-more-btn{
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.05em; text-transform:uppercase;
+    background:none; border:1px solid var(--line); color:var(--line-bright); padding:7px 14px;
+    border-radius:2px; cursor:pointer; margin-bottom:18px;
+  }
+  .stage-more-btn:hover{ border-color:var(--line-bright); background:rgba(142,202,230,0.06); }
+  li.extra-item{ display:none; }
+  .stage.expanded li.extra-item{ display:list-item; }
+  .stage.expanded .stage-more-btn .lbl-more{ display:none; }
+  .stage.expanded .stage-more-btn .lbl-less{ display:inline; }
+  .stage-more-btn .lbl-less{ display:none; }
+
+  /* ---------- SUMMARY ---------- */
+  .summary-grid{ display:grid; grid-template-columns: 0.9fr 1.1fr; gap:56px; align-items:start; }
+  .callouts{ display:flex; flex-direction:column; gap:0; }
+  .callout{
+    display:grid; grid-template-columns: 56px 1fr; gap:16px; padding:20px 0;
+    border-top:1px solid var(--grid-line-strong);
+  }
+  .callout:last-child{ border-bottom:1px solid var(--grid-line-strong); }
+  .callout .tag{ font-family:var(--font-mono); font-size:12px; color:var(--amber); padding-top:2px; }
+  .callout p{ margin:0; color:var(--ink-dim); font-size:14.5px; }
+  .callout strong{ color:var(--ink); font-weight:600; }
+
+  .summary-note{
+    background:var(--bg-panel); border:1px solid var(--grid-line-strong); border-radius:2px; padding:26px 26px 22px;
+  }
+  .summary-note .note-head{
+    font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--ink-faint); margin-bottom:14px; padding-bottom:10px; border-bottom:1px dashed var(--grid-line-strong);
+  }
+  .summary-note p{ color:var(--ink-dim); margin:0 0 14px; font-size:14.5px; }
+  .summary-note p:last-child{ margin-bottom:0; }
+
+  /* ---------- BOM / STACK TABLE ---------- */
+  .bom-wrap{ border:1px solid var(--grid-line-strong); border-radius:2px; overflow:hidden; }
+  table.bom{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.bom thead th{
+    font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--ink-faint); text-align:left; background:var(--bg-panel-2);
+    padding:12px 16px; border-bottom:1px solid var(--grid-line-strong);
+  }
+  table.bom thead th.num{ width:56px; text-align:center; }
+  table.bom thead th.qty{ width:70px; text-align:center; }
+  table.bom tbody td{ padding:14px 16px; border-bottom:1px solid var(--grid-line); vertical-align:top; }
+  table.bom tbody tr:last-child td{ border-bottom:none; }
+  table.bom tbody tr:hover{ background:rgba(142,202,230,0.04); }
+  table.bom td.num{ text-align:center; font-family:var(--font-mono); color:var(--ink-faint); }
+  table.bom td.qty{ text-align:center; font-family:var(--font-mono); color:var(--green); }
+  table.bom td.cat{ font-family:var(--font-display); font-weight:600; color:var(--ink); white-space:nowrap; }
+  table.bom td.items{ color:var(--ink-dim); }
+
+  /* ---------- EXPERIENCE ---------- */
+  .exp-rail{ position:relative; padding-left:34px; }
+  .exp-rail::before{
+    content:""; position:absolute; left:5px; top:6px; bottom:6px; width:1px;
+    background:linear-gradient(var(--line-bright), var(--line) 60%, transparent);
+  }
+  .stage{ position:relative; margin-bottom:64px; }
+  .stage:last-child{ margin-bottom:0; }
+  .stage::before{
+    content:""; position:absolute; left:-34px; top:6px; width:11px; height:11px;
+    border-radius:50%; background:var(--bg); border:2px solid var(--line-bright);
+  }
+  .stage-head{ display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:6px; }
+  .stage-role{ font-family:var(--font-display); font-weight:600; font-size:21px; color:var(--ink); }
+  .stage-dates{
+    font-family:var(--font-mono); font-size:12px; color:var(--amber);
+    border:1px solid rgba(255,182,39,0.35); padding:4px 10px; border-radius:2px; white-space:nowrap;
+  }
+  .stage-org{ font-family:var(--font-mono); font-size:13.5px; color:var(--line-bright); margin-bottom:2px; }
+  .stage-client{ font-family:var(--font-mono); font-size:12px; color:var(--ink-faint); margin-bottom:18px; }
+
+  ul.stage-list{ margin:0 0 20px; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px; }
+  ul.stage-list li{
+    position:relative; padding-left:20px; color:var(--ink-dim); font-size:14.5px;
+  }
+  ul.stage-list li::before{ content:"▸"; position:absolute; left:0; color:var(--line); }
+  ul.stage-list li strong{ color:var(--ink); font-weight:600; }
+
+  .env-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+  .env-chip{
+    font-family:var(--font-mono); font-size:11px; color:var(--ink-dim);
+    background:var(--bg-panel-2); border:1px solid var(--grid-line-strong);
+    padding:4px 9px; border-radius:2px;
+  }
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  .contact-block{
+    display:grid; grid-template-columns: 1.1fr 0.9fr; gap:56px; align-items:center;
+  }
+  .contact-block h2.section-title{ margin-bottom:18px; }
+  .contact-block .hero-desc{ margin-top:0; }
+  .contact-cta{ display:flex; flex-wrap:wrap; gap:14px; margin-top:28px; }
+  .btn{
+    font-family:var(--font-mono); font-size:13px; text-decoration:none; letter-spacing:0.04em;
+    padding:12px 20px; border-radius:2px; display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary{ background:var(--amber); color:#0B1E33; font-weight:600; }
+  .btn-primary:hover{ background:#ffc659; }
+  .btn-outline{ border:1px solid var(--line); color:var(--ink); }
+  .btn-outline:hover{ border-color:var(--line-bright); color:var(--line-bright); }
+
+  .titleblock-footer{
+    border:1px solid var(--grid-line-strong); border-radius:2px; overflow:hidden; font-family:var(--font-mono); font-size:12px;
+  }
+  .tf-row{ display:flex; border-bottom:1px solid var(--grid-line-strong); }
+  .tf-row:last-child{ border-bottom:none; }
+  .tf-cell{ flex:1; padding:12px 14px; border-right:1px solid var(--grid-line-strong); }
+  .tf-cell:last-child{ border-right:none; }
+  .tf-label{ color:var(--ink-faint); font-size:10px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:4px; }
+  .tf-value{ color:var(--ink); }
+  .tf-value.green{ color:var(--green); }
+
+  footer{ padding:40px 0 60px; text-align:center; }
+  footer .endmark{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); letter-spacing:0.16em; }
+  footer .endmark::before, footer .endmark::after{ content:"—"; margin:0 12px; color:var(--grid-line-strong); }
+
+  @media (max-width: 900px){
+    .titleblock, .summary-grid, .contact-block{ grid-template-columns: 1fr; }
+    .schematic{ order:-1; }
+    .navlinks{ display:none; }
+    section{ padding:64px 0 48px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="crosshair ch-tl"></div>
+<div class="crosshair ch-tr"></div>
+<div class="crosshair ch-bl"></div>
+<div class="crosshair ch-br"></div>
+<div class="sheet-frame"></div>
+
+<nav class="navbar">
+  <a href="#top" class="brand">SM<span>/</span>PORTFOLIO</a>
+  <ul class="navlinks" id="navlinks">
+    <li><a href="#summary" data-target="summary"><span class="idx">01</span>Summary</a></li>
+    <li><a href="#stack" data-target="stack"><span class="idx">02</span>Stack</a></li>
+    <li><a href="#experience" data-target="experience"><span class="idx">03</span>Experience</a></li>
+    <li><a href="#contact" data-target="contact"><span class="idx">04</span>Contact</a></li>
+  </ul>
+</nav>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="titleblock">
+      <div class="titleblock-copy">
+        <div class="role-tag"><span class="dot"></span>AVAILABLE — FULL-TIME &amp; CONTRACT</div>
+        <h1>Sathvik Merugu
+          <span class="sub">Senior Full-Stack .NET Developer</span>
+        </h1>
+        <p class="hero-desc">Seven-plus years designing and running the systems that move enterprise data end to end — from Oracle PL/SQL and Kafka streams through .NET services to the screens people use every day. Based in Toronto, building for healthcare-scale volume.</p>
+        <div class="hero-meta">
+          <span class="meta-item"><span class="k">TEL</span> 438 341 4002 <button class="copy-btn" data-copy="4383414002" aria-label="Copy phone number">⧉</button></span>
+          <span class="meta-item"><span class="k">MAIL</span> <a href="mailto:sathvik.sai4002@gmail.com">sathvik.sai4002@gmail.com</a> <button class="copy-btn" data-copy="sathvik.sai4002@gmail.com" aria-label="Copy email address">⧉</button></span>
+          <span class="meta-item"><span class="k">LI</span> <a href="https://linkedin.com/in/sathvik-merugu-209b79406" target="_blank" rel="noopener">linkedin.com/in/sathvik-merugu</a></span>
+          <span class="meta-item"><span class="k">GH</span> <a href="https://github.com/sathvikhub" target="_blank" rel="noopener">github.com/sathvikhub</a></span>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat"><span class="stat-num" data-count="7" data-unit="+">0</span><span class="stat-label">Years experience</span></div>
+          <div class="stat"><span class="stat-num" data-count="100" data-unit="K+">0</span><span class="stat-label">Member records served</span></div>
+          <div class="stat"><span class="stat-num" data-count="2" data-unit="">0</span><span class="stat-label">Enterprise employers</span></div>
+          <div class="stat"><span class="stat-num" data-count="12" data-unit="">0</span><span class="stat-label">Stack categories</span></div>
+        </div>
+      </div>
+
+      <div class="schematic">
+        <div class="cap"><span>FIG. 01 — ENROLLMENT &amp; BILLING DATA FLOW</span><span>LIVE</span></div>
+        <svg class="pipeline" viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- connecting pipes -->
+          <path id="p1" class="pipe" d="M75,60 L75,140 L225,140"></path>
+          <path id="p2" class="pipe" d="M225,140 L225,60 L370,60"></path>
+          <path id="p3" class="pipe" d="M75,220 L75,140"></path>
+          <path id="p4" class="pipe" d="M225,140 L225,220 L370,220"></path>
+
+          <!-- packets traveling -->
+          <circle class="packet" r="3.6"><animateMotion dur="3.2s" repeatCount="indefinite" path="M75,60 L75,140 L225,140"/></circle>
+          <circle class="packet2" r="3.2"><animateMotion dur="2.6s" begin="0.4s" repeatCount="indefinite" path="M225,140 L225,60 L370,60"/></circle>
+          <circle class="packet" r="3.2"><animateMotion dur="2.8s" begin="0.9s" repeatCount="indefinite" path="M75,220 L75,140"/></circle>
+          <circle class="packet2" r="3.6"><animateMotion dur="3.4s" begin="1.3s" repeatCount="indefinite" path="M225,140 L225,220 L370,220"/></circle>
+
+          <!-- ORACLE -->
+          <g class="node" data-node="oracle" tabindex="0" role="button" aria-label="Oracle / SQL Server node — show details">
+            <rect class="node-box" x="10" y="30" width="130" height="60" rx="2"></rect>
+            <text class="node-label" x="24" y="56">ORACLE / SQL SVR</text>
+            <text class="node-sub" x="24" y="72">PL/SQL · MERGE · GTT</text>
+          </g>
+
+          <!-- MONGO/COSMOS -->
+          <g class="node" data-node="mongo" tabindex="0" role="button" aria-label="MongoDB / Cosmos DB node — show details">
+            <rect class="node-box" x="10" y="190" width="130" height="60" rx="2"></rect>
+            <text class="node-label" x="24" y="216">MONGODB / COSMOS</text>
+            <text class="node-sub" x="24" y="232">Operational store</text>
+          </g>
+
+          <!-- KAFKA -->
+          <g class="node" data-node="kafka" tabindex="0" role="button" aria-label="Kafka stream node — show details">
+            <rect class="node-box" x="165" y="110" width="120" height="60" rx="2"></rect>
+            <text class="node-label" x="182" y="136">KAFKA STREAM</text>
+            <text class="node-sub" x="182" y="152">Offset-controlled</text>
+          </g>
+
+          <!-- API -->
+          <g class="node" data-node="api" tabindex="0" role="button" aria-label="REST / Web API node — show details">
+            <rect class="node-box" x="330" y="30" width="120" height="60" rx="2"></rect>
+            <text class="node-label" x="346" y="56">REST / WEB API</text>
+            <text class="node-sub" x="346" y="72">.NET 6/7/8</text>
+          </g>
+
+          <!-- ANGULAR -->
+          <g class="node" data-node="angular" tabindex="0" role="button" aria-label="Angular UI node — show details">
+            <rect class="node-box" x="330" y="190" width="120" height="60" rx="2"></rect>
+            <text class="node-label" x="350" y="216">ANGULAR UI</text>
+            <text class="node-sub" x="350" y="232">Member workflows</text>
+          </g>
+        </svg>
+        <div class="schematic-hint">Click a node for detail →</div>
+        <div class="node-panel" id="nodePanel">
+          <div class="np-title" id="npTitle">Select a node</div>
+          <div class="np-body" id="npBody"><span class="np-placeholder">Click any box in the diagram above to see what I actually built there.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section id="summary">
+    <div class="eyebrow">01 — Summary</div>
+    <h2 class="section-title">What I build, and how I run it in production</h2>
+    <div class="summary-grid">
+      <div class="callouts">
+        <div class="callout">
+          <div class="tag">SCALE</div>
+          <p><strong>100,000+ member records</strong> under continuous enrollment and billing processing at Centene / Fidelis Care, across proration, retroactive adjustment, and subsidy reconciliation cycles.</p>
+        </div>
+        <div class="callout">
+          <div class="tag">STREAM</div>
+          <p><strong>Kafka-based streaming pipelines</strong> with configurable batch sizes, per-record validation, audit trails, and controlled offset commits — built to fail safely, not silently.</p>
+        </div>
+        <div class="callout">
+          <div class="tag">SUPPORT</div>
+          <p><strong>P1/P2 incident ownership</strong> across .NET, Oracle, Kafka, APIs, and scheduled jobs, using Splunk and log diagnostics to hold SLA resolution targets.</p>
+        </div>
+        <div class="callout">
+          <div class="tag">TOOLING</div>
+          <p><strong>AI-assisted development</strong> with GitHub Copilot and Azure OpenAI for test generation, defect triage, and data-processing logic — used deliberately, not decoratively.</p>
+        </div>
+      </div>
+      <div class="summary-note">
+        <div class="note-head">Engineer's note</div>
+        <p>Most of my work sits at the seams — where an Oracle batch job hands off to a Kafka topic, where a legacy .NET Framework service has to talk to a modern Angular front end, where a vendor integration needs a retry strategy instead of a prayer. Seven years of enterprise healthcare systems has made me fluent in exactly that kind of handoff.</p>
+        <p>I care about the parts of the system nobody screenshots: batch runtimes, offset commits, token refresh logic, the audit table that tells you what actually happened at 2 a.m.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK / BOM -->
+  <section id="stack">
+    <div class="eyebrow">02 — Stack</div>
+    <h2 class="section-title">Bill of materials</h2>
+    <div class="bom-controls">
+      <input type="text" class="bom-search" id="bomSearch" placeholder="Filter components — try &quot;kafka&quot; or &quot;azure&quot;" aria-label="Filter stack table">
+      <span class="bom-count" id="bomCount">12 categories</span>
+    </div>
+    <div class="bom-wrap">
+      <table class="bom" id="bomTable">
+        <thead>
+          <tr>
+            <th class="num">No.</th>
+            <th>Category</th>
+            <th>Components</th>
+            <th class="qty">Qty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">01</td>
+            <td class="cat">Languages</td>
+            <td class="items">C#, VB.NET, JavaScript, TypeScript, Node.js, SQL, PL/SQL, C++</td>
+            <td class="qty">8</td>
+          </tr>
+          <tr>
+            <td class="num">02</td>
+            <td class="cat">.NET Frameworks</td>
+            <td class="items">.NET Framework 3.5/4.x, .NET Core, .NET 6/7/8, Entity Framework Core, LINQ, WCF, ADO.NET, SignalR</td>
+            <td class="qty">8</td>
+          </tr>
+          <tr>
+            <td class="num">03</td>
+            <td class="cat">Web / API</td>
+            <td class="items">ASP.NET Core, ASP.NET MVC, Web API, Minimal APIs, AJAX, JSON, HTML5, CSS3</td>
+            <td class="qty">8</td>
+          </tr>
+          <tr>
+            <td class="num">04</td>
+            <td class="cat">Frontend</td>
+            <td class="items">Angular, React, Angular Material, Kendo UI, Bootstrap, jQuery, TypeScript</td>
+            <td class="qty">7</td>
+          </tr>
+          <tr>
+            <td class="num">05</td>
+            <td class="cat">Databases</td>
+            <td class="items">Oracle, SQL Server, MongoDB, Azure Cosmos DB — stored procedures, packages, triggers, views, GTTs, MERGE</td>
+            <td class="qty">6</td>
+          </tr>
+          <tr>
+            <td class="num">06</td>
+            <td class="cat">Messaging &amp; Integration</td>
+            <td class="items">Apache Kafka, REST APIs, event-driven architecture, MSMQ, EDI processing, XML/XSLT</td>
+            <td class="qty">6</td>
+          </tr>
+          <tr>
+            <td class="num">07</td>
+            <td class="cat">Architecture</td>
+            <td class="items">Microservices, N-Tier, MVC, MVVM, SOLID, design patterns, distributed systems</td>
+            <td class="qty">6</td>
+          </tr>
+          <tr>
+            <td class="num">08</td>
+            <td class="cat">Cloud &amp; DevOps</td>
+            <td class="items">Microsoft Azure, Azure App Services, AWS, Docker, Kubernetes, Helm, Jenkins, GitLab CI/CD, Azure DevOps</td>
+            <td class="qty">9</td>
+          </tr>
+          <tr>
+            <td class="num">09</td>
+            <td class="cat">ETL &amp; Reporting</td>
+            <td class="items">SSIS, SSRS, data transformation, batch processing, data validation, operational reporting</td>
+            <td class="qty">6</td>
+          </tr>
+          <tr>
+            <td class="num">10</td>
+            <td class="cat">Testing</td>
+            <td class="items">NUnit, MOQ, unit &amp; integration testing, TDD, Swagger, Postman</td>
+            <td class="qty">6</td>
+          </tr>
+          <tr>
+            <td class="num">11</td>
+            <td class="cat">Tools &amp; Version Control</td>
+            <td class="items">Visual Studio, VS Code, Git, GitHub, GitLab, TFS, Jira, JFrog Artifactory, ServiceNow, Splunk, Studio 3T</td>
+            <td class="qty">11</td>
+          </tr>
+          <tr>
+            <td class="num">12</td>
+            <td class="cat">AI Tools</td>
+            <td class="items">GitHub Copilot, Azure OpenAI Service, LangChain, AI-assisted code &amp; test generation</td>
+            <td class="qty">4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="eyebrow">03 — Experience</div>
+    <h2 class="section-title">Deployment history</h2>
+
+    <div class="exp-rail">
+      <div class="stage">
+        <div class="stage-head">
+          <div class="stage-role">Senior Full Stack .NET Developer</div>
+          <div class="stage-dates">AUG 2022 — PRESENT</div>
+        </div>
+        <div class="stage-org">Centene Corporation / Fidelis Care</div>
+        <div class="stage-client">Client: Avansa IT Solutions · Toronto, ON</div>
+        <ul class="stage-list">
+          <li>Designed enterprise <strong>healthcare enrollment and billing systems</strong> on C#, .NET Framework, ASP.NET Core, Web API, Angular, and Oracle PL/SQL, supporting 100,000+ member records.</li>
+          <li>Built and ran <strong>Kafka-based real-time streaming pipelines</strong> for enrollment, billing, and downstream integration, cutting reconciliation delays and data discrepancies.</li>
+          <li>Implemented billing logic for <strong>proration, retroactive adjustments, grace periods, subsidy reconciliation</strong>, and eligibility across high-volume monthly cycles.</li>
+          <li>Led <strong>P1/P2 production incident triage</strong> across .NET, Oracle, Kafka, APIs, and scheduled jobs, meeting SLA resolution targets using Splunk diagnostics.</li>
+          <li class="extra-item">Tuned Oracle PL/SQL procedures, packages, and GTT-based batch queries, <strong>reducing critical batch runtimes</strong> and improving database stability.</li>
+          <li class="extra-item">Designed resilient batch logic with configurable batch sizes, per-record validation, audit tables, retry handling, and controlled Kafka offset commits.</li>
+          <li class="extra-item">Used GitHub Copilot and AI-assisted tooling to generate unit tests, troubleshoot defects, and optimize data-processing logic.</li>
+        </ul>
+        <button class="stage-more-btn" type="button"><span class="lbl-more">+ Show 3 more</span><span class="lbl-less">− Show fewer</span></button>
+        <div class="env-row">
+          <span class="env-chip">.NET 6/7/8</span><span class="env-chip">Angular</span><span class="env-chip">React</span>
+          <span class="env-chip">Oracle PL/SQL</span><span class="env-chip">Kafka</span><span class="env-chip">Azure</span>
+          <span class="env-chip">AWS</span><span class="env-chip">Docker</span><span class="env-chip">Kubernetes</span>
+          <span class="env-chip">Splunk</span>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-head">
+          <div class="stage-role">Senior Full Stack .NET Developer</div>
+          <div class="stage-dates">AUG 2019 — JUL 2022</div>
+        </div>
+        <div class="stage-org">WorkJam</div>
+        <div class="stage-client">Via Avansa IT Solutions · Montreal, QC</div>
+        <ul class="stage-list">
+          <li>Built enterprise web applications on C#, ASP.NET MVC, ASP.NET Core Web API, Entity Framework, SQL Server, Angular, React, and Node.js.</li>
+          <li>Designed <strong>REST APIs</strong> integrating internal applications with third-party systems, automating business workflows and cutting manual processing effort.</li>
+          <li>Developed <strong>SSRS reports and operational dashboards</strong> for business insight and production reconciliation.</li>
+          <li>Implemented <strong>JWT and role-based authorization</strong> to secure enterprise web and intranet applications.</li>
+          <li class="extra-item">Created and optimized SQL Server stored procedures, functions, views, triggers, and migration scripts supporting production releases.</li>
+          <li class="extra-item">Applied multithreading and async processing to improve throughput and responsiveness under load.</li>
+          <li class="extra-item">Provided L2/L3 production support, investigating application and database issues through to root cause.</li>
+        </ul>
+        <button class="stage-more-btn" type="button"><span class="lbl-more">+ Show 3 more</span><span class="lbl-less">− Show fewer</span></button>
+        <div class="env-row">
+          <span class="env-chip">ASP.NET MVC</span><span class="env-chip">ASP.NET Core</span><span class="env-chip">SQL Server</span>
+          <span class="env-chip">MongoDB</span><span class="env-chip">Angular</span><span class="env-chip">React</span>
+          <span class="env-chip">Node.js</span><span class="env-chip">SSRS</span><span class="env-chip">NUnit</span>
+          <span class="env-chip">TFS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="eyebrow">04 — Contact</div>
+    <div class="contact-block">
+      <div>
+        <h2 class="section-title">Let's talk about the next system</h2>
+        <p class="hero-desc">Open to full-time and contract roles, remote or hybrid, based out of Toronto. If you're moving data across a lot of moving parts, I'd like to hear about it.</p>
+        <div class="contact-cta">
+          <a class="btn btn-primary" href="mailto:sathvik.sai4002@gmail.com">Email me →</a>
+          <a class="btn btn-outline" href="https://linkedin.com/in/sathvik-merugu-209b79406" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn btn-outline" href="https://github.com/sathvikhub" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+      <div class="titleblock-footer">
+        <div class="tf-row">
+          <div class="tf-cell"><div class="tf-label">Drawn by</div><div class="tf-value">Sathvik Merugu</div></div>
+          <div class="tf-cell"><div class="tf-label">Sheet</div><div class="tf-value">01 / 01</div></div>
+        </div>
+        <div class="tf-row">
+          <div class="tf-cell"><div class="tf-label">Location</div><div class="tf-value">Toronto, ON</div></div>
+          <div class="tf-cell"><div class="tf-label">Status</div><div class="tf-value green">Open to work</div></div>
+        </div>
+        <div class="tf-row">
+          <div class="tf-cell"><div class="tf-label">Work authorization</div><div class="tf-value">Canadian PR</div></div>
+          <div class="tf-cell"><div class="tf-label">Engagement</div><div class="tf-value">Full-time · Contract</div></div>
+        </div>
+        <div class="tf-row">
+          <div class="tf-cell" style="border-right:none;"><div class="tf-label">Phone</div><div class="tf-value">438 341 4002</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="endmark">END OF DRAWING</div>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+
+  /* ---------- Nav active-section highlighting ---------- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('#navlinks a'));
+  var sections = navLinks.map(function(a){ return document.getElementById(a.dataset.target); }).filter(Boolean);
+  if('IntersectionObserver' in window && sections.length){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var link = document.querySelector('#navlinks a[data-target="'+entry.target.id+'"]');
+        if(!link) return;
+        if(entry.isIntersecting){
+          navLinks.forEach(function(l){ l.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function(s){ obs.observe(s); });
+  }
+
+  /* ---------- Animated stat counters ---------- */
+  var stats = Array.prototype.slice.call(document.querySelectorAll('.stat-num'));
+  function animateCount(el){
+    var target = parseInt(el.dataset.count, 10) || 0;
+    var unit = el.dataset.unit || '';
+    var duration = 900;
+    var startTime = null;
+    function step(ts){
+      if(startTime === null) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var val = Math.round(target * eased);
+      el.innerHTML = val + (unit ? '<span class="unit">'+unit+'</span>' : '');
+      if(progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window && stats.length){
+    var statObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          animateCount(entry.target);
+          statObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    stats.forEach(function(s){ statObs.observe(s); });
+  } else {
+    stats.forEach(animateCount);
+  }
+
+  /* ---------- Copy buttons ---------- */
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.dataset.copy;
+      var done = function(){
+        var original = btn.textContent;
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(function(){ btn.textContent = original; btn.classList.remove('copied'); }, 1400);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(done);
+      } else {
+        done();
+      }
+    });
+  });
+
+  /* ---------- Schematic node interactivity ---------- */
+  var nodeInfo = {
+    oracle: { title: 'Oracle / SQL Server — source of record', body: 'PL/SQL packages, stored procedures, and MERGE scripts driving proration, retroactive adjustment, and subsidy reconciliation across 100,000+ member records. Tuned GTT-based batch queries to cut critical batch runtimes.' },
+    mongo:  { title: 'MongoDB / Cosmos DB — operational store', body: 'Document and NoSQL storage used alongside SQL Server for transactional processing, operational reporting, and large-scale data analysis where a relational schema would slow things down.' },
+    kafka:  { title: 'Kafka stream — the seam between systems', body: 'Real-time streaming pipelines for enrollment and billing, built with configurable batch sizes, per-record validation, audit tables, retry handling, and controlled offset commits — designed to fail loudly, not silently.' },
+    api:    { title: 'REST / Web API — the contract layer', body: 'ASP.NET Core Web API and Minimal APIs on .NET 6/7/8, with token refresh and retry strategies for unauthorized responses, throttling, and transient errors on outbound integrations.' },
+    angular:{ title: 'Angular UI — where people work', body: 'Responsive Angular components with TypeScript, Kendo UI, and Angular Material powering the enrollment and billing workflows that end users actually touch every day.' }
+  };
+  var pipeMap = {
+    oracle: ['p1'], mongo: ['p3'], kafka: ['p1','p2','p3','p4'], api: ['p2'], angular: ['p4']
+  };
+  var nodes = document.querySelectorAll('.node');
+  var npTitle = document.getElementById('npTitle');
+  var npBody = document.getElementById('npBody');
+  function selectNode(el){
+    nodes.forEach(function(n){ n.classList.remove('active'); });
+    document.querySelectorAll('.pipe').forEach(function(p){ p.classList.remove('lit'); });
+    el.classList.add('active');
+    var key = el.dataset.node;
+    (pipeMap[key] || []).forEach(function(id){
+      var p = document.getElementById(id);
+      if(p) p.classList.add('lit');
+    });
+    var info = nodeInfo[key];
+    if(info){
+      npTitle.textContent = info.title;
+      npBody.textContent = info.body;
+    }
+  }
+  nodes.forEach(function(el){
+    el.addEventListener('click', function(){ selectNode(el); });
+    el.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); selectNode(el); }
+    });
+  });
+
+  /* ---------- BOM filter + expandable rows ---------- */
+  var bomDetail = {
+    'Languages': 'Eight languages spanning backend services (C#, VB.NET), scripting (Node.js), and data (SQL, PL/SQL).',
+    '.NET Frameworks': 'From legacy .NET Framework 3.5 through modern .NET 8, including EF Core and SignalR for real-time features.',
+    'Web / API': 'ASP.NET Core and MVC for full applications; Web API and Minimal APIs for lightweight service surfaces.',
+    'Frontend': 'Angular is primary; React and Kendo UI/Angular Material round out enterprise UI needs.',
+    'Databases': 'Oracle and SQL Server for transactional systems; MongoDB and Cosmos DB where document storage fits better.',
+    'Messaging & Integration': 'Kafka anchors real-time integration; MSMQ and EDI cover legacy and partner-facing exchange formats.',
+    'Architecture': 'Microservices and N-Tier by default, with SOLID and established design patterns underneath.',
+    'Cloud & DevOps': 'Azure-first, AWS where required, containerized with Docker/Kubernetes, deployed via Jenkins, GitLab, and Azure DevOps.',
+    'ETL & Reporting': 'SSIS pipelines feeding SSRS reports and operational dashboards for reconciliation and business insight.',
+    'Testing': 'NUnit and MOQ for unit/integration coverage; Swagger and Postman for API verification.',
+    'Tools & Version Control': 'Full toolchain from IDE to incident management — Visual Studio through ServiceNow and Splunk.',
+    'AI Tools': 'GitHub Copilot and Azure OpenAI used for test generation, defect triage, and accelerating routine code.'
+  };
+  var bomTable = document.getElementById('bomTable');
+  var rows = Array.prototype.slice.call(bomTable.querySelectorAll('tbody tr'));
+  rows.forEach(function(row){
+    row.addEventListener('click', function(){
+      var already = row.nextElementSibling && row.nextElementSibling.classList.contains('detail-row');
+      bomTable.querySelectorAll('tr.detail-row.open').forEach(function(d){
+        d.classList.remove('open');
+        if(d.previousElementSibling) d.previousElementSibling.classList.remove('expanded');
+      });
+      if(already){
+        row.nextElementSibling.remove();
+        row.classList.remove('expanded');
+        return;
+      }
+      var cat = row.querySelector('.cat').textContent.trim();
+      var detail = bomDetail[cat] || 'Applied throughout the stack above.';
+      var tr = document.createElement('tr');
+      tr.className = 'detail-row open';
+      var td = document.createElement('td');
+      td.colSpan = 4;
+      td.textContent = '→ ' + detail;
+      tr.appendChild(td);
+      row.parentNode.insertBefore(tr, row.nextSibling);
+      row.classList.add('expanded');
+    });
+  });
+
+  var bomSearch = document.getElementById('bomSearch');
+  var bomCount = document.getElementById('bomCount');
+  bomSearch.addEventListener('input', function(){
+    var q = bomSearch.value.trim().toLowerCase();
+    var visible = 0;
+    rows.forEach(function(row){
+      var text = row.textContent.toLowerCase();
+      var match = text.indexOf(q) !== -1;
+      row.classList.toggle('hidden-row', !match);
+      var detail = row.nextElementSibling;
+      if(detail && detail.classList.contains('detail-row') && !match){
+        detail.classList.remove('open');
+      }
+      if(match) visible++;
+    });
+    bomCount.textContent = visible + (visible === 1 ? ' category' : ' categories') + (q ? ' matched' : '');
+  });
+
+  /* ---------- Experience show more/fewer ---------- */
+  document.querySelectorAll('.stage-more-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var stage = btn.closest('.stage');
+      stage.classList.toggle('expanded');
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
